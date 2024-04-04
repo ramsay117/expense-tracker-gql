@@ -53,8 +53,7 @@ const userResolver = {
           profilePicture: gender === 'male' ? boyProfilePic : girlProfilePic,
         });
         await newUser.save();
-        context.login(newUser); // triggers Passport.js to log in the user,
-        //creates a session for that user (req.session)
+        context.login(newUser); // triggers Passport.js to log in the user, creates a session for that user (req.session)
         return newUser;
       } catch (error) {
         console.log('Error in signUp:', error);
@@ -80,8 +79,9 @@ const userResolver = {
     },
     logout: async (_, __, context) => {
       try {
-        await context.logout();
+        await context.logout(); // remove the user from the req.user
         context.req.session.destroy((error) => {
+          // to remove the entire session from the session store
           if (error) throw new Error(error);
         });
         await context.res.clearCookie('connect.sid');
