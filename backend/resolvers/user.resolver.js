@@ -53,7 +53,7 @@ const userResolver = {
           profilePicture: gender === 'male' ? boyProfilePic : girlProfilePic,
         });
         await newUser.save();
-        context.login(newUser); // triggers Passport.js to log in the user, creates a session for that user (req.session)
+        await context.login(newUser); // triggers Passport.js to log in the user, creates a session for that user (req.session)
         return newUser;
       } catch (error) {
         console.log('Error in signUp:', error);

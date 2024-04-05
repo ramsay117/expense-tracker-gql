@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import InputField from '../components/InputField';
 import { BackgroundGradient } from '../components/ui/background-gradient.jsx';
+import { useMutation } from '@apollo/client';
+import { LOGIN } from '../graphql/mutations/user.mutation.js';
+import toast from 'react-hot-toast';
+import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({
@@ -17,16 +21,25 @@ const LoginPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const [login, { loading }] = useMutation(LOGIN, {
+    refetchQueries: [GET_AUTHENTICATED_USER],
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(loginData);
+    try {
+      await login({ variables: { input: loginData } });
+    } catch (error) {
+      console.log('Error in login:', error);
+      toast.error(error.message);
+    }
   };
 
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="flex rounded-lg overflow-hidden z-50 bg-gray-300">
         <BackgroundGradient>
-          <div className="w-full bg-gray-100 min-w-80 sm:min-w-96 flex items-center justify-center rounded">
+          <div className="w-full bg-gray-100 min-w-80 sm:min-w-96 flex items-center justify-center">
             <div className="max-w-md w-full p-6">
               <h1 className="text-3xl font-semibold mb-6 text-black text-center">
                 Login
@@ -55,10 +68,10 @@ const LoginPage = () => {
                   <button
                     type="submit"
                     className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black  focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300
-										disabled:opacity-50 disabled:cursor-not-allowed
-									"
+										disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={loading}
                   >
-                    Login
+                    {loading ? 'Loading...' : 'Login'}
                   </button>
                 </div>
               </form>
@@ -77,5 +90,4 @@ const LoginPage = () => {
     </div>
   );
 };
-
 export default LoginPage;
