@@ -37,14 +37,19 @@ const HomePage = () => {
     ],
   };
 
-  const [logout, { loading, error }] = useMutation(LOGOUT, {
-    refetchQueries: [GET_AUTHENTICATED_USER],
+  const [logout, { loading, client }] = useMutation(LOGOUT, {
+    update: (cache) => {
+      cache.writeQuery({
+        query: GET_AUTHENTICATED_USER,
+        data: { authUser: null },
+      });
+    },
   });
 
   const handleLogout = async () => {
-    console.log('Logging out...');
     try {
       await logout();
+      client.clearStore(); // clears the cache of all stored data.
     } catch (error) {
       console.log('Error in logout:', error);
       toast.error(error.message);
@@ -75,9 +80,11 @@ const HomePage = () => {
           )}
         </div>
         <div className="flex flex-wrap w-full justify-center items-center gap-6">
-          <div className="h-[330px] w-[330px] md:h-[360px] md:w-[360px]  ">
-            <Doughnut data={chartData} />
-          </div>
+          {
+            <div className="h-[330px] w-[330px] md:h-[360px] md:w-[360px]  ">
+              <Doughnut data={chartData} />
+            </div>
+          }
 
           <TransactionForm />
         </div>

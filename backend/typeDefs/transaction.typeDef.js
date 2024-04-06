@@ -17,7 +17,7 @@ const transactionTypeDef = `#graphql
 
   type Mutation {
     createTransaction(input: CreateTransactionInput!): Transaction!
-    updateTransaction(input: updateTransactionInput!): Transaction!
+    updateTransaction(input: UpdateTransactionInput!): Transaction!
     deleteTransaction(transactionId: ID!): Transaction!
   }
 
@@ -30,7 +30,7 @@ const transactionTypeDef = `#graphql
     location: String
   }
 
-  input updateTransactionInput {
+  input UpdateTransactionInput {
     transactionId: ID!  
     description: String
     paymentType: String

@@ -1,7 +1,37 @@
+import { useMutation, useQuery } from '@apollo/client';
+import { CREATE_TRANSACTION } from '../graphql/mutations/transaction.mutation.js';
+import toast from 'react-hot-toast';
+import { GET_TRANSACTIONS } from '../graphql/queries/transaction.query.js';
+import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
+
 const TransactionForm = () => {
+  const { data: authUser } = useQuery(GET_AUTHENTICATED_USER);
+
+  const [createTransaction, { loading, error }] = useMutation(
+    CREATE_TRANSACTION,
+    {
+      update: (cache, { data: { createTransaction } }) => {
+        const existingTransactionsData = cache.readQuery({
+          query: GET_TRANSACTIONS,
+        });
+        const existingTransactions = existingTransactionsData
+          ? existingTransactionsData.transactions
+          : [];
+        cache.writeQuery({
+          query: GET_TRANSACTIONS,
+          data: {
+            transactions: [
+              { ...createTransaction, userId: authUser.authUser._id },
+              ...existingTransactions,
+            ],
+          },
+        });
+      },
+    }
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const form = e.target;
     const formData = new FormData(form);
     const transactionData = {
@@ -13,6 +43,14 @@ const TransactionForm = () => {
       date: formData.get('date'),
     };
     console.log('transactionData', transactionData);
+    try {
+      await createTransaction({ variables: { input: transactionData } });
+      form.reset();
+      toast.success('Transaction created successfully!');
+    } catch (error) {
+      console.log('Error in createTransaction:', error);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -131,7 +169,7 @@ const TransactionForm = () => {
             id="location"
             name="location"
             type="text"
-            placeholder="New York"
+            placeholder="Delhi, India"
           />
         </div>
 
@@ -148,7 +186,6 @@ const TransactionForm = () => {
             name="date"
             id="date"
             className="appearance-none block w-full bg-gray-200 text-gray-700 border  rounded py-[11px] px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-            placeholder="Select date"
           />
         </div>
       </div>
@@ -158,8 +195,9 @@ const TransactionForm = () => {
             from-indigo-600 via-purple-600 to-pink-500 hover:from-indigo-500 hover:via-purple-600 hover:to-pink-600
 						disabled:opacity-70 disabled:cursor-not-allowed"
         type="submit"
+        disabled={loading}
       >
-        Add Transaction
+        {loading ? 'Loading...' : 'Add Transaction'}
       </button>
     </form>
   );

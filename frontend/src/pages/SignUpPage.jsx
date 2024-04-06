@@ -17,7 +17,12 @@ const SignUpPage = () => {
   });
 
   const [signup, { loading }] = useMutation(SIGN_UP, {
-    refetchQueries: [GET_AUTHENTICATED_USER],
+    update: (cache, { data: { signUp } }) => {
+      cache.writeQuery({
+        query: GET_AUTHENTICATED_USER,
+        data: { authUser: signUp },
+      });
+    },
   });
 
   const handleChange = (e) => {

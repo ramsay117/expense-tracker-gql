@@ -22,7 +22,12 @@ const LoginPage = () => {
   };
 
   const [login, { loading }] = useMutation(LOGIN, {
-    refetchQueries: [GET_AUTHENTICATED_USER],
+    update: (cache, { data: { login } }) => {
+      cache.writeQuery({
+        query: GET_AUTHENTICATED_USER,
+        data: { authUser: login },
+      });
+    },
   });
 
   const handleSubmit = async (e) => {
