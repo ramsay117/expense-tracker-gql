@@ -5,7 +5,7 @@ const userResolver = {
   Query: {
     authUser: async (_, __, context) => {
       try {
-        const user = await context.getUser();
+        const user = context.getUser();
         return user;
       } catch (error) {
         console.log('Error in authUser:', error);

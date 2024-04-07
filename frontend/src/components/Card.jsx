@@ -9,7 +9,10 @@ import { BackgroundGradient } from './ui/background-gradient.jsx';
 import { formatDate } from '../utils/formatDate.js';
 import { useMutation } from '@apollo/client';
 import { DELETE_TRANSACTION } from '../graphql/mutations/transaction.mutation.js';
-import { GET_TRANSACTIONS } from '../graphql/queries/transaction.query.js';
+import {
+  GET_CATEGORY_STATS,
+  GET_TRANSACTIONS,
+} from '../graphql/queries/transaction.query.js';
 import toast from 'react-hot-toast';
 
 const categoryColorMap = {
@@ -24,24 +27,7 @@ const Card = ({ transaction, authUser }) => {
     transaction;
 
   const [deleteTransaction, { loading }] = useMutation(DELETE_TRANSACTION, {
-    update: (cache, { data: { deleteTransaction } }) => {
-      const existingTransactionsData = cache.readQuery({
-        query: GET_TRANSACTIONS,
-      });
-      if (existingTransactionsData && existingTransactionsData.transactions) {
-        console.log(existingTransactionsData.transactions);
-        const updatedTransactions =
-          existingTransactionsData.transactions.filter(
-            (transaction) => transaction._id !== deleteTransaction._id
-          );
-        cache.writeQuery({
-          query: GET_TRANSACTIONS,
-          data: {
-            transactions: updatedTransactions,
-          },
-        });
-      }
-    },
+    refetchQueries: [GET_TRANSACTIONS, GET_CATEGORY_STATS],
   });
 
   const cardClass = categoryColorMap[category];

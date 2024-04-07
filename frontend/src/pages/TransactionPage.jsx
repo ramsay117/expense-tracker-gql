@@ -1,7 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { GET_TRANSACTION } from '../graphql/queries/transaction.query.js';
+import {
+  GET_CATEGORY_STATS,
+  GET_TRANSACTION,
+} from '../graphql/queries/transaction.query.js';
 import { UPDATE_TRANSACTION } from '../graphql/mutations/transaction.mutation.js';
 import toast from 'react-hot-toast';
 import TransactionFormSkeleton from '../components/skeletons/TransactionFormSkeleton.jsx';
@@ -27,6 +30,28 @@ const TransactionPage = () => {
               ...updateTransaction,
               userId: authUser.authUser._id,
             },
+          },
+        });
+        const existingCategoryStatsData = cache.readQuery({
+          query: GET_CATEGORY_STATS,
+        });
+        const updatedCategoryStats =
+          existingCategoryStatsData.categoryStats.map((stat) => {
+            if (stat.category === updateTransaction.category) {
+              return {
+                ...stat,
+                totalAmount:
+                  stat.totalAmount -
+                  data.transaction.amount +
+                  updateTransaction.amount,
+              };
+            }
+            return stat;
+          });
+        cache.writeQuery({
+          query: GET_CATEGORY_STATS,
+          data: {
+            categoryStats: updatedCategoryStats,
           },
         });
       },

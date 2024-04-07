@@ -1,32 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_TRANSACTION } from '../graphql/mutations/transaction.mutation.js';
 import toast from 'react-hot-toast';
-import { GET_TRANSACTIONS } from '../graphql/queries/transaction.query.js';
-import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
+import {
+  GET_CATEGORY_STATS,
+  GET_TRANSACTIONS,
+} from '../graphql/queries/transaction.query.js';
 
 const TransactionForm = () => {
-  const { data: authUser } = useQuery(GET_AUTHENTICATED_USER);
-
   const [createTransaction, { loading, error }] = useMutation(
     CREATE_TRANSACTION,
     {
-      update: (cache, { data: { createTransaction } }) => {
-        const existingTransactionsData = cache.readQuery({
-          query: GET_TRANSACTIONS,
-        });
-        const existingTransactions = existingTransactionsData
-          ? existingTransactionsData.transactions
-          : [];
-        cache.writeQuery({
-          query: GET_TRANSACTIONS,
-          data: {
-            transactions: [
-              { ...createTransaction, userId: authUser.authUser._id },
-              ...existingTransactions,
-            ],
-          },
-        });
-      },
+      refetchQueries: [GET_TRANSACTIONS, GET_CATEGORY_STATS],
     }
   );
 
@@ -42,7 +26,6 @@ const TransactionForm = () => {
       location: formData.get('location'),
       date: formData.get('date'),
     };
-    console.log('transactionData', transactionData);
     try {
       await createTransaction({ variables: { input: transactionData } });
       form.reset();

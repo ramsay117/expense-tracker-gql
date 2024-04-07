@@ -1,6 +1,7 @@
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
+import path from 'path';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
@@ -17,6 +18,7 @@ import { configurePassport } from './passport/passport.cofig.js';
 config();
 configurePassport();
 
+const __dirname = path.resolve();
 const app = express();
 const httpServer = http.createServer(app);
 
@@ -64,6 +66,11 @@ app.use(
     context: async ({ req, res }) => buildContext({ req, res }),
   })
 );
+
+app.use(express.static(path.join(__dirname, 'frontend/dist')));
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'frontend/dist', 'index.html'));
+});
 
 const PORT = process.env.PORT || 8000;
 await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));

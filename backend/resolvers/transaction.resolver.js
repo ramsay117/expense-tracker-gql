@@ -4,7 +4,7 @@ const transactionResolver = {
   Query: {
     transactions: async (_, __, context) => {
       try {
-        const authUser = await context.getUser();
+        const authUser = context.getUser();
         if (!authUser) {
           throw new Error('Unauthorized');
         }
@@ -25,6 +25,33 @@ const transactionResolver = {
         return transaction;
       } catch (error) {
         console.log('Error in transaction query:', error);
+        throw new Error(error.message || 'Internal Server Error');
+      }
+    },
+    categoryStats: async (_, __, context) => {
+      try {
+        const authUser = context.getUser();
+        if (!authUser) {
+          throw new Error('Unauthorized');
+        }
+        const userId = authUser._id;
+        const transactions = await Transaction.find({ userId });
+        const categoryAmountMap = {};
+        transactions.forEach((transaction) => {
+          if (categoryAmountMap[transaction.category]) {
+            categoryAmountMap[transaction.category] += transaction.amount;
+          } else {
+            categoryAmountMap[transaction.category] = transaction.amount;
+          }
+        });
+        return Object.entries(categoryAmountMap).map(
+          ([category, totalAmount]) => ({
+            category,
+            totalAmount,
+          })
+        );
+      } catch (error) {
+        console.log('Error in categoryStats query:', error);
         throw new Error(error.message || 'Internal Server Error');
       }
     },

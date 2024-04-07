@@ -22,12 +22,7 @@ const LoginPage = () => {
   };
 
   const [login, { loading }] = useMutation(LOGIN, {
-    update: (cache, { data: { login } }) => {
-      cache.writeQuery({
-        query: GET_AUTHENTICATED_USER,
-        data: { authUser: login },
-      });
-    },
+    refetchQueries: [GET_AUTHENTICATED_USER],
   });
 
   const handleSubmit = async (e) => {
@@ -44,7 +39,7 @@ const LoginPage = () => {
     <div className="flex justify-center items-center h-screen">
       <div className="flex rounded-lg overflow-hidden z-50 bg-gray-300">
         <BackgroundGradient>
-          <div className="w-full bg-gray-100 min-w-80 sm:min-w-96 flex items-center justify-center">
+          <div className="w-full bg-gray-100 min-w-80 sm:min-w-96 flex items-center justify-center rounded">
             <div className="max-w-md w-full p-6">
               <h1 className="text-3xl font-semibold mb-6 text-black text-center">
                 Login
