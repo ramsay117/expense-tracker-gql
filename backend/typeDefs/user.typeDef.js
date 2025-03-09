@@ -14,12 +14,12 @@ const userTypeDef = `#graphql
   }
 
   type Mutation {
-    signUp(input: SignUpInput!): User
+    signup(input: SignupInput!): User
     login(input: LoginInput!): User
     logout: LogoutResponse
   }
 
-  input SignUpInput {
+  input SignupInput {
     name: String!
     username: String!
     password: String!

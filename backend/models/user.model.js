@@ -21,10 +21,11 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
+      required: true,
       enum: ['male', 'female'],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User = mongoose.model('User', userSchema);

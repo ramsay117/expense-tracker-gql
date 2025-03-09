@@ -3,13 +3,12 @@ import User from '../models/user.model.js';
 
 const userResolver = {
   Query: {
-    authUser: async (_, __, context) => {
+    authUser: (_, __, context) => {
       try {
-        const user = context.getUser();
+        const user = context.getUser(); // checks req.user
         return user;
       } catch (error) {
-        console.log('Error in authUser:', error);
-        throw new Error(error.message || 'Internal Server Error');
+        throw error;
       }
     },
     user: async (_, { userId }) => {
@@ -20,8 +19,7 @@ const userResolver = {
         }
         return user;
       } catch (error) {
-        console.log('Error in user query:', error);
-        throw new Error(error.message || 'Internal Server Error');
+        throw error;
       }
     },
   },
@@ -56,8 +54,7 @@ const userResolver = {
         await context.login(newUser); // triggers Passport.js to log in the user, creates a session for that user (req.session)
         return newUser;
       } catch (error) {
-        console.log('Error in signUp:', error);
-        throw new Error(error.message || 'Internal Server Error');
+        throw error;
       }
     },
     login: async (_, { input }, context) => {
@@ -73,8 +70,7 @@ const userResolver = {
         await context.login(user);
         return user;
       } catch (error) {
-        console.log('Error in login:', error);
-        throw new Error(error.message || 'Internal Server Error');
+        throw error;
       }
     },
     logout: async (_, __, context) => {
@@ -84,11 +80,10 @@ const userResolver = {
           // to remove the entire session from the session store
           if (error) throw new Error(error);
         });
-        await context.res.clearCookie('connect.sid');
+        await context.res.clearCookie('connect.sid'); // clears the session cookie from the client
         return { message: 'Logout successful' };
       } catch (error) {
-        console.log('Error in logout:', error);
-        throw new Error(error.message || 'Internal Server Error');
+        throw error;
       }
     },
   },
