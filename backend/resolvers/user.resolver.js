@@ -78,7 +78,7 @@ const userResolver = {
         await context.logout(); // remove the user from the req.user
         context.req.session.destroy((error) => {
           // to remove the entire session from the session store
-          if (error) throw new Error(error);
+          if (error) throw error;
         });
         await context.res.clearCookie('connect.sid'); // clears the session cookie from the client
         return { message: 'Logout successful' };
