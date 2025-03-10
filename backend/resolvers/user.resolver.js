@@ -26,8 +26,8 @@ const userResolver = {
   Mutation: {
     signup: async (_, { input }, context) => {
       try {
-        const { username, name, password, gender } = input;
-        if (!username || !name || !password || !gender) {
+        const { username, fullName, password, gender } = input;
+        if (!username || !fullName || !password || !gender) {
           throw new Error('All fields are required');
         }
         const existingUser = await User.findOne({ username });
@@ -45,7 +45,7 @@ const userResolver = {
 
         const newUser = new User({
           username,
-          name,
+          fullName,
           password: hashedPassword,
           gender,
           profilePicture: gender === 'male' ? boyProfilePic : girlProfilePic,

@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import path from 'path';
+import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
@@ -10,13 +11,12 @@ import passport from 'passport';
 import session from 'express-session';
 import ConnectMongo from 'connect-mongodb-session';
 import { buildContext } from 'graphql-passport';
-import { config } from 'dotenv';
 import mergedTypeDefs from './typeDefs/index.js';
 import mergedResolvers from './resolvers/index.js';
 import connectToMongoDB from './db/connectToMongoDB.js';
 import { configurePassport } from './passport/passport.config.js';
 
-config();
+dotenv.config();
 const __dirname = path.resolve();
 
 const app = express();
@@ -47,7 +47,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7d
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
       httpOnly: true,
     },
     store,
