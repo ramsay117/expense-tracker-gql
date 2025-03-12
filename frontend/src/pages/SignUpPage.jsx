@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import RadioButton from '../components/RadioButton';
-import InputField from '../components/InputField';
+import RadioButton from '../components/RadioButton.jsx';
+import InputField from '../components/InputField.jsx';
 import { BackgroundGradient } from '../components/ui/background-gradient.jsx';
 import { useMutation } from '@apollo/client';
 import { SIGN_UP } from '../graphql/mutations/user.mutation.js';
 import toast from 'react-hot-toast';
 import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
 
-const SignUpPage = () => {
+const SignupPage = () => {
   const [signUpData, setSignUpData] = useState({
     name: '',
     username: '',
@@ -60,20 +60,12 @@ const SignUpPage = () => {
         <BackgroundGradient>
           <div className="w-full bg-gray-100 min-w-80 sm:min-w-96 flex items-center justify-center rounded">
             <div className="max-w-md w-full p-6">
-              <h1 className="text-3xl font-semibold mb-6 text-black text-center">
-                Sign Up
-              </h1>
+              <h1 className="text-3xl font-semibold mb-6 text-black text-center">Sign Up</h1>
               <h1 className="text-sm font-semibold mb-6 text-gray-500 text-center">
                 Join to keep track of your expenses
               </h1>
               <form className="space-y-4" onSubmit={handleSubmit}>
-                <InputField
-                  label="Full Name"
-                  id="name"
-                  name="name"
-                  value={signUpData.name}
-                  onChange={handleChange}
-                />
+                <InputField label="Full Name" id="name" name="name" value={signUpData.name} onChange={handleChange} />
                 <InputField
                   label="Username"
                   id="username"
@@ -135,4 +127,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignupPage;

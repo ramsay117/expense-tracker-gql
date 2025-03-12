@@ -14,13 +14,9 @@ const Cards = () => {
       {loading ? (
         <p className="text-2xl font-bold text-center">Loading...</p>
       ) : data?.transactions.length > 0 ? (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-start mb-20">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-20">
           {data.transactions.map((transaction) => (
-            <Card
-              key={transaction._id}
-              transaction={transaction}
-              authUser={authUser}
-            />
+            <Card key={transaction._id} transaction={transaction} authUser={authUser} />
           ))}
         </div>
       ) : (

@@ -1,10 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  GET_CATEGORY_STATS,
-  GET_TRANSACTION,
-} from '../graphql/queries/transaction.query.js';
+import { GET_CATEGORY_STATS, GET_TRANSACTION } from '../graphql/queries/transaction.query.js';
 import { UPDATE_TRANSACTION } from '../graphql/mutations/transaction.mutation.js';
 import toast from 'react-hot-toast';
 import TransactionFormSkeleton from '../components/skeletons/TransactionFormSkeleton.jsx';
@@ -17,46 +14,39 @@ const TransactionPage = () => {
   });
   const { data: authUser } = useQuery(GET_AUTHENTICATED_USER);
 
-  const [updateTransaction, { loading: loadingUpdate }] = useMutation(
-    UPDATE_TRANSACTION,
-    {
-      update: (cache, { data: { updateTransaction } }) => {
-        cache.writeQuery({
-          query: GET_TRANSACTION,
-          //  pass the variables for GET_TRANSACTION
-          variables: { transactionId: id },
-          data: {
-            transaction: {
-              ...updateTransaction,
-              userId: authUser.authUser._id,
-            },
+  const [updateTransaction, { loading: loadingUpdate }] = useMutation(UPDATE_TRANSACTION, {
+    update: (cache, { data: { updateTransaction } }) => {
+      cache.writeQuery({
+        query: GET_TRANSACTION,
+        //  pass the variables for GET_TRANSACTION
+        variables: { transactionId: id },
+        data: {
+          transaction: {
+            ...updateTransaction,
+            userId: authUser.authUser._id,
           },
-        });
-        const existingCategoryStatsData = cache.readQuery({
-          query: GET_CATEGORY_STATS,
-        });
-        const updatedCategoryStats =
-          existingCategoryStatsData.categoryStats.map((stat) => {
-            if (stat.category === updateTransaction.category) {
-              return {
-                ...stat,
-                totalAmount:
-                  stat.totalAmount -
-                  data.transaction.amount +
-                  updateTransaction.amount,
-              };
-            }
-            return stat;
-          });
-        cache.writeQuery({
-          query: GET_CATEGORY_STATS,
-          data: {
-            categoryStats: updatedCategoryStats,
-          },
-        });
-      },
-    }
-  );
+        },
+      });
+      const existingCategoryStatsData = cache.readQuery({
+        query: GET_CATEGORY_STATS,
+      });
+      const updatedCategoryStats = existingCategoryStatsData.categoryStats.map((stat) => {
+        if (stat.category === updateTransaction.category) {
+          return {
+            ...stat,
+            totalAmount: stat.totalAmount - data.transaction.amount + updateTransaction.amount,
+          };
+        }
+        return stat;
+      });
+      cache.writeQuery({
+        query: GET_CATEGORY_STATS,
+        data: {
+          categoryStats: updatedCategoryStats,
+        },
+      });
+    },
+  });
 
   useEffect(() => {
     if (data) {
@@ -112,17 +102,11 @@ const TransactionPage = () => {
       <p className="md:text-4xl text-2xl lg:text-4xl font-bold text-center relative z-50 mb-4 mr-4 bg-gradient-to-r from-pink-600 via-indigo-500 to-pink-400 inline-block text-transparent bg-clip-text">
         Update this transaction
       </p>
-      <form
-        className="w-full max-w-lg flex flex-col gap-5 px-3 "
-        onSubmit={handleSubmit}
-      >
+      <form className="w-full max-w-lg flex flex-col gap-5 px-3 " onSubmit={handleSubmit}>
         {/* TRANSACTION */}
         <div className="flex flex-wrap">
           <div className="w-full">
-            <label
-              className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-              htmlFor="description"
-            >
+            <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="description">
               Transaction
             </label>
             <input
@@ -139,10 +123,7 @@ const TransactionPage = () => {
         {/* PAYMENT TYPE */}
         <div className="flex flex-wrap gap-3">
           <div className="w-full flex-1 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-              htmlFor="paymentType"
-            >
+            <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="paymentType">
               Payment Type
             </label>
             <div className="relative">
@@ -157,11 +138,7 @@ const TransactionPage = () => {
                 <option value={'cash'}>Cash</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
@@ -170,10 +147,7 @@ const TransactionPage = () => {
 
           {/* CATEGORY */}
           <div className="w-full flex-1 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-              htmlFor="category"
-            >
+            <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="category">
               Category
             </label>
             <div className="relative">
@@ -189,11 +163,7 @@ const TransactionPage = () => {
                 <option value={'investment'}>Investment</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
@@ -202,10 +172,7 @@ const TransactionPage = () => {
 
           {/* AMOUNT */}
           <div className="w-full flex-1 mb-6 md:mb-0">
-            <label
-              className="block uppercase text-white text-xs font-bold mb-2"
-              htmlFor="amount"
-            >
+            <label className="block uppercase text-white text-xs font-bold mb-2" htmlFor="amount">
               Amount($)
             </label>
             <input
@@ -223,10 +190,7 @@ const TransactionPage = () => {
         {/* LOCATION */}
         <div className="flex flex-wrap gap-3">
           <div className="w-full flex-1 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-              htmlFor="location"
-            >
+            <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="location">
               Location
             </label>
             <input
@@ -242,10 +206,7 @@ const TransactionPage = () => {
 
           {/* DATE */}
           <div className="w-full flex-1">
-            <label
-              className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-              htmlFor="date"
-            >
+            <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="date">
               Date
             </label>
             <input
