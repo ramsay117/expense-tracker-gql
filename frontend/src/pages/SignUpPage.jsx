@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import RadioButton from '../components/RadioButton.jsx';
-import InputField from '../components/InputField.jsx';
-import { BackgroundGradient } from '../components/ui/background-gradient.jsx';
-import { useMutation } from '@apollo/client';
-import { SIGNUP } from '../graphql/mutations/user.mutation.js';
 import toast from 'react-hot-toast';
+import { useMutation } from '@apollo/client';
+import { BackgroundGradient } from '../components/ui/background-gradient.jsx';
+import InputField from '../components/InputField.jsx';
+import RadioButton from '../components/RadioButton.jsx';
+import { SIGNUP } from '../graphql/mutations/user.mutation.js';
 import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
 
 const SignupPage = () => {

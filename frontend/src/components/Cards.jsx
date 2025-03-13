@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
+import Card from './Card.jsx';
 import { GET_TRANSACTIONS } from '../graphql/queries/transaction.query.js';
-import Card from './Card';
 import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
 
 const Cards = () => {

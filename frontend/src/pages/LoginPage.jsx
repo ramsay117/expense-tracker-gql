@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import InputField from '../components/InputField';
-import { BackgroundGradient } from '../components/ui/background-gradient.jsx';
+import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../graphql/mutations/user.mutation.js';
-import toast from 'react-hot-toast';
 import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
+import InputField from '../components/InputField.jsx';
+import { BackgroundGradient } from '../components/ui/background-gradient.jsx';
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({

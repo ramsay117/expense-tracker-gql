@@ -1,14 +1,14 @@
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import Cards from '../components/Cards';
-import TransactionForm from '../components/TransactionForm';
 import { MdLogout } from 'react-icons/md';
-import { useMutation, useQuery } from '@apollo/client';
-import { LOGOUT } from '../graphql/mutations/user.mutation.js';
 import toast from 'react-hot-toast';
+import Cards from '../components/Cards.jsx';
+import TransactionForm from '../components/TransactionForm.jsx';
+import { LOGOUT } from '../graphql/mutations/user.mutation.js';
 import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
 import { GET_CATEGORY_STATS } from '../graphql/queries/transaction.query.js';
-import { useEffect, useState } from 'react';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

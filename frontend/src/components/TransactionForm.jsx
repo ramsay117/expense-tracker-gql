@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { CREATE_TRANSACTION } from '../graphql/mutations/transaction.mutation.js';
+import { useMutation } from '@apollo/client';
 import toast from 'react-hot-toast';
+import { CREATE_TRANSACTION } from '../graphql/mutations/transaction.mutation.js';
 import { GET_CATEGORY_STATS, GET_TRANSACTIONS } from '../graphql/queries/transaction.query.js';
 
 const TransactionForm = () => {
