@@ -24,22 +24,20 @@ const httpServer = http.createServer(app);
 app.use(express.json());
 app.use(cookieParser());
 
-if (process.env.NODE_ENV !== 'production') {
-  app.use(
-    cors({
-      origin: ['http://localhost:5173', 'http://localhost:3000'],
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    }),
-  );
-}
+app.use(cors({
+  origin: process.env.NODE_ENV !== 'production'
+    ? ['http://localhost:5173', 'http://localhost:3000']
+    : true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}))
 
-const mongoDBStore = ConnectMongo(session);
-const store = new mongoDBStore({
-  uri: process.env.MONGODB_URI,
-  collection: 'sessions',
-});
-store.on('error', (error) => console.error('Session store error:', error.message));
+// const mongoDBStore = ConnectMongo(session);
+// const store = new mongoDBStore({
+//   uri: process.env.MONGODB_URI,
+//   collection: 'sessions',
+// });
+// store.on('error', (error) => console.error('Session store error:', error.message));
 
 app.use(
   session({
@@ -50,8 +48,8 @@ app.use(
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
       httpOnly: true,
     },
-    store,
-  }),
+    // No store specified - will use in-memory store which is better for serverless
+  })
 );
 
 app.use(passport.initialize());
@@ -86,33 +84,10 @@ async function startServer() {
 
     await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
     await connectToMongoDB();
-
     console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
-
-    setupGracefulShutdown(server, httpServer);
   } catch (error) {
     console.error('Failed to start server:', error.message);
-    process.exit(1);
   }
-}
-
-function setupGracefulShutdown(server, httpServer) {
-  const shutdown = async (signal) => {
-    console.log(`${signal} received, shutting down gracefully`);
-    try {
-      await server.stop();
-      httpServer.close(() => {
-        console.log('HTTP server closed');
-        process.exit(0);
-      });
-    } catch (error) {
-      console.error('Error during shutdown:', error);
-      process.exit(1);
-    }
-  };
-
-  process.on('SIGINT', () => shutdown('SIGINT'));
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
 }
 
 startServer();
