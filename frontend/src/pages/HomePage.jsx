@@ -41,7 +41,7 @@ const HomePage = () => {
   });
 
   useEffect(() => {
-    if (!data || !data.categoryStats) return;
+    if (!data?.categoryStats) return;
     const labels = data.categoryStats.map((stat) => stat.category);
     const backgroundColors = labels.map((label) => {
       if (label.toLowerCase() === 'saving') return 'rgba(75, 192, 192)';
@@ -53,7 +53,7 @@ const HomePage = () => {
       labels,
       datasets: [
         {
-          ...prev.datasets?.[0],
+          ...prev.datasets[0],
           data: data.categoryStats.map((stat) => stat.totalAmount),
           backgroundColor: backgroundColors,
           borderColor: backgroundColors,
@@ -65,9 +65,8 @@ const HomePage = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      client.clearStore(); // clears the cache of all stored data.
+      client.clearStore();
     } catch (error) {
-      console.log('Error in logout:', error);
       toast.error(error.message);
     }
   };
@@ -80,12 +79,11 @@ const HomePage = () => {
             Spend wisely, track wisely
           </p>
           <img
-            src={authData?.authUser.profilePicture || ''}
+            src={authData?.authUser.profilePic || ''}
             className="w-11 h-11 rounded-full border cursor-pointer"
             alt="Avatar"
           />
           {!loading && <MdLogout className="mx-2 w-5 h-5 cursor-pointer" onClick={handleLogout} />}
-          {/* loading spinner */}
           {loading && <div className="w-6 h-6 border-t-2 border-b-2 mx-2 rounded-full animate-spin"></div>}
         </div>
         <div className="flex flex-wrap w-full justify-center items-center gap-6">
@@ -94,7 +92,6 @@ const HomePage = () => {
               <Doughnut data={chartData} />
             </div>
           )}
-
           <TransactionForm />
         </div>
         <Cards />

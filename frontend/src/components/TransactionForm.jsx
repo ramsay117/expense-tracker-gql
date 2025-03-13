@@ -25,7 +25,6 @@ const TransactionForm = () => {
       form.reset();
       toast.success('Transaction created successfully!');
     } catch (error) {
-      console.log('Error in createTransaction:', error);
       toast.error(error.message);
     }
   };
@@ -70,7 +69,6 @@ const TransactionForm = () => {
             </div>
           </div>
         </div>
-
         {/* CATEGORY */}
         <div className="w-full flex-1 mb-6 md:mb-0">
           <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="category">
@@ -93,11 +91,10 @@ const TransactionForm = () => {
             </div>
           </div>
         </div>
-
         {/* AMOUNT */}
         <div className="w-full flex-1 mb-6 md:mb-0">
           <label className="block uppercase text-white text-xs font-bold mb-2" htmlFor="amount">
-            Amount($)
+            Amount(₹)
           </label>
           <input
             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -108,7 +105,6 @@ const TransactionForm = () => {
           />
         </div>
       </div>
-
       {/* LOCATION */}
       <div className="flex flex-wrap gap-3">
         <div className="w-full flex-1 mb-6 md:mb-0">
@@ -123,7 +119,6 @@ const TransactionForm = () => {
             placeholder="Delhi, India"
           />
         </div>
-
         {/* DATE */}
         <div className="w-full flex-1">
           <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="date">

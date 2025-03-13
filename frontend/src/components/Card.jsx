@@ -38,7 +38,6 @@ const Card = ({ transaction, authUser }) => {
       });
       toast.success('Transaction deleted successfully!');
     } catch (error) {
-      console.log('Error in deleteTransaction:', error);
       toast.error(error.message);
     }
   };
@@ -74,7 +73,7 @@ const Card = ({ transaction, authUser }) => {
           </p>
           <div className="flex justify-between items-center">
             <p className="text-xs text-black font-bold">{formattedDate}</p>
-            <img src={authUser?.profilePicture} className="h-8 w-8 border rounded-full" alt="" />
+            <img src={authUser?.profilePic} className="h-8 w-8 border rounded-full" alt="" />
           </div>
         </div>
       </div>

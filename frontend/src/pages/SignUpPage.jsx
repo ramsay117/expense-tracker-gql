@@ -4,37 +4,36 @@ import RadioButton from '../components/RadioButton.jsx';
 import InputField from '../components/InputField.jsx';
 import { BackgroundGradient } from '../components/ui/background-gradient.jsx';
 import { useMutation } from '@apollo/client';
-import { SIGN_UP } from '../graphql/mutations/user.mutation.js';
+import { SIGNUP } from '../graphql/mutations/user.mutation.js';
 import toast from 'react-hot-toast';
 import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
 
 const SignupPage = () => {
-  const [signUpData, setSignUpData] = useState({
-    name: '',
+  const [signupData, setSignupData] = useState({
+    fullName: '',
     username: '',
     password: '',
     gender: '',
   });
 
-  const [signup, { loading }] = useMutation(SIGN_UP, {
-    update: (cache, { data: { signUp } }) => {
+  const [signup, { loading }] = useMutation(SIGNUP, {
+    update: (cache, { data: { signup } }) => {
       cache.writeQuery({
         query: GET_AUTHENTICATED_USER,
-        data: { authUser: signUp },
+        data: { authUser: signup },
       });
     },
   });
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-
     if (type === 'radio') {
-      setSignUpData((prevData) => ({
+      setSignupData((prevData) => ({
         ...prevData,
         gender: value,
       }));
     } else {
-      setSignUpData((prevData) => ({
+      setSignupData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
@@ -46,11 +45,10 @@ const SignupPage = () => {
     try {
       await signup({
         variables: {
-          input: signUpData,
+          input: signupData,
         },
       });
     } catch (error) {
-      console.log('Error in signup:', error);
       toast.error(error.message);
     }
   };
@@ -65,12 +63,18 @@ const SignupPage = () => {
                 Join to keep track of your expenses
               </h1>
               <form className="space-y-4" onSubmit={handleSubmit}>
-                <InputField label="Full Name" id="name" name="name" value={signUpData.name} onChange={handleChange} />
+                <InputField
+                  label="Full Name"
+                  id="fullName"
+                  name="fullName"
+                  value={signupData.fullName}
+                  onChange={handleChange}
+                />
                 <InputField
                   label="Username"
                   id="username"
                   name="username"
-                  value={signUpData.username}
+                  value={signupData.username}
                   onChange={handleChange}
                 />
 
@@ -79,7 +83,7 @@ const SignupPage = () => {
                   id="password"
                   name="password"
                   type="password"
-                  value={signUpData.password}
+                  value={signupData.password}
                   onChange={handleChange}
                 />
                 <div className="flex gap-10">
@@ -89,7 +93,7 @@ const SignupPage = () => {
                     name="gender"
                     value="male"
                     onChange={handleChange}
-                    checked={signUpData.gender === 'male'}
+                    checked={signupData.gender === 'male'}
                   />
                   <RadioButton
                     id="female"
@@ -97,7 +101,7 @@ const SignupPage = () => {
                     name="gender"
                     value="female"
                     onChange={handleChange}
-                    checked={signUpData.gender === 'female'}
+                    checked={signupData.gender === 'female'}
                   />
                 </div>
 

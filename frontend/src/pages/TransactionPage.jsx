@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GET_CATEGORY_STATS, GET_TRANSACTION } from '../graphql/queries/transaction.query.js';
 import { UPDATE_TRANSACTION } from '../graphql/mutations/transaction.mutation.js';
 import toast from 'react-hot-toast';
@@ -9,6 +9,7 @@ import { GET_AUTHENTICATED_USER } from '../graphql/queries/user.query.js';
 
 const TransactionPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { loading, data } = useQuery(GET_TRANSACTION, {
     variables: { transactionId: id },
   });
@@ -18,7 +19,6 @@ const TransactionPage = () => {
     update: (cache, { data: { updateTransaction } }) => {
       cache.writeQuery({
         query: GET_TRANSACTION,
-        //  pass the variables for GET_TRANSACTION
         variables: { transactionId: id },
         data: {
           transaction: {
@@ -51,22 +51,23 @@ const TransactionPage = () => {
   useEffect(() => {
     if (data) {
       setFormData({
-        description: data?.transaction.description,
-        paymentType: data?.transaction.paymentType,
-        category: data?.transaction.category,
-        amount: data?.transaction.amount,
-        location: data?.transaction.location,
-        date: data?.transaction.date,
+        description: data.transaction.description,
+        paymentType: data.transaction.paymentType,
+        category: data.transaction.category,
+        amount: data.transaction.amount,
+        location: data.transaction.location,
+        date: data.transaction.date,
       });
     }
   }, [data]);
+
   const [formData, setFormData] = useState({
-    description: data?.transaction.description || '',
-    paymentType: data?.transaction.paymentType || '',
-    category: data?.transaction.category || '',
-    amount: data?.transaction.amount || '',
-    location: data?.transaction.location || '',
-    date: data?.transaction.date || '',
+    description: '',
+    paymentType: '',
+    category: '',
+    amount: '',
+    location: '',
+    date: '',
   });
 
   const handleSubmit = async (e) => {
@@ -82,8 +83,8 @@ const TransactionPage = () => {
         },
       });
       toast.success('Transaction updated successfully!');
+      navigate('/');
     } catch (error) {
-      console.log('Error in updateTransaction:', error);
       toast.error(error.message);
     }
   };
@@ -144,7 +145,6 @@ const TransactionPage = () => {
               </div>
             </div>
           </div>
-
           {/* CATEGORY */}
           <div className="w-full flex-1 mb-6 md:mb-0">
             <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="category">
@@ -169,7 +169,6 @@ const TransactionPage = () => {
               </div>
             </div>
           </div>
-
           {/* AMOUNT */}
           <div className="w-full flex-1 mb-6 md:mb-0">
             <label className="block uppercase text-white text-xs font-bold mb-2" htmlFor="amount">
@@ -186,7 +185,6 @@ const TransactionPage = () => {
             />
           </div>
         </div>
-
         {/* LOCATION */}
         <div className="flex flex-wrap gap-3">
           <div className="w-full flex-1 mb-6 md:mb-0">
@@ -203,7 +201,6 @@ const TransactionPage = () => {
               onChange={handleInputChange}
             />
           </div>
-
           {/* DATE */}
           <div className="w-full flex-1">
             <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="date">
@@ -213,8 +210,7 @@ const TransactionPage = () => {
               type="date"
               name="date"
               id="date"
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-[11px] px-4 mb-3 leading-tight focus:outline-none
-						 focus:bg-white"
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-[11px] px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               placeholder="Select date"
               value={formData.date}
               onChange={handleInputChange}

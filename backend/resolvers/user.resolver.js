@@ -48,7 +48,7 @@ const userResolver = {
           fullName,
           password: hashedPassword,
           gender,
-          profilePicture: gender === 'male' ? boyProfilePic : girlProfilePic,
+          profilePic: gender === 'male' ? boyProfilePic : girlProfilePic,
         });
         await newUser.save();
         await context.login(newUser); // triggers Passport.js to log in the user, creates a session for that user (req.session)

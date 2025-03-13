@@ -1,13 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { Toaster } from 'react-hot-toast';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import TransactionPage from './pages/TransactionPage';
 import NotFound from './pages/NotFoundPage';
 import Header from './components/ui/Header';
-import { useQuery } from '@apollo/client';
 import { GET_AUTHENTICATED_USER } from './graphql/queries/user.query.js';
-import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { data } = useQuery(GET_AUTHENTICATED_USER);

@@ -30,7 +30,6 @@ const LoginPage = () => {
     try {
       await login({ variables: { input: loginData } });
     } catch (error) {
-      console.log('Error in login:', error);
       toast.error(error.message);
     }
   };
@@ -53,7 +52,6 @@ const LoginPage = () => {
                   value={loginData.username}
                   onChange={handleChange}
                 />
-
                 <InputField
                   label="Password"
                   id="password"
