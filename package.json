@@ -3,10 +3,10 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "start.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js",
+    "start": "node start.js",
+    "dev": "nodemon start.js",
     "build": "npm install && cd frontend && npm install && npm run build && cd .."
   },
   "keywords": [],

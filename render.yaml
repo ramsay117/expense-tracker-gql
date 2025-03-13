@@ -3,7 +3,7 @@ services:
     name: expense-tracker-gql
     runtime: node
     buildCommand: npm run build
-    startCommand: npm start
+    startCommand: node start.js
     envVars:
       - key: NODE_ENV
         value: production
